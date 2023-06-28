@@ -13,7 +13,23 @@ const genericRequest = async (url, method, body, logging = false) => {
     }
     const response = await fetch(url, options);
     const data = await response.json();
-    return data;
+
+    if (response.status == 200) {
+ 
+        objResponse = {
+            "error": false,
+            "msj" : 'Información correcta.',
+            "data" : data
+        }
+    } else {
+        objResponse = {
+            "error": true,
+            "msj" : 'No se encontró id buscado.',
+            "data" : {}
+        }
+    }
+
+    return objResponse;
 }
 
 const peopleRequest = async (url, method) => {
