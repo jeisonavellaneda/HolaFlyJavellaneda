@@ -38,25 +38,26 @@ const applySwapiEndpoints = (server, app) => {
             // 60 y 82 cantidad de personajes y plantenas que responde end point.
             const planetaAleatorio = Math.round(Math.random()*60);
             const personajeAleatorio= Math.round(Math.random()*82);
-            let ale = {
-                'personajeAleatorio': personajeAleatorio,
-                'planetaAleatorio' : planetaAleatorio
-            }
-
             const dataPersonaje = await app.swapiFunctions.genericRequest(`https://swapi.dev/api/people/${personajeAleatorio}`, 'GET', null, true);
             const dataPlaneta = await app.swapiFunctions.genericRequest(`https://swapi.dev/api/planets/${planetaAleatorio}`, 'GET', null, true);
             const retorno = await app.swapiFunctions.getWeightOnPlanet(dataPersonaje.data.mass, dataPlaneta.data.gravity, dataPersonaje.data.name);
 
             res.status(200).send(retorno);
-            
         } catch (err) {
             res.status(400).send({ error: err.message });
         }
     });
 
     server.get('/hfswapi/getLogs',async (req, res) => {
-        const data = await app.db.logging.findAll();
-        res.send(data);
+        try {
+            const { page, quantity } = { pag: 0, canti: 25, ...req.query };
+
+            const logs = await app.services.loggingService.findAll({ pag, canti });
+
+            res.status(200).send({ docs: logs, page: +page, quantity: +quantity });
+        } catch (err) {
+            res.status(400).send({ error: err.message });
+        }
     });
 
 }
