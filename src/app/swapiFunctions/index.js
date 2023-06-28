@@ -1,18 +1,43 @@
 const fetch = require('node-fetch');
 
-const getWeightOnPlanet = (mass, gravity) => {
-    return mass * gravity;
+const getWeightOnPlanet = (mass, gravity, nameP) => {
+
+    console.log('mass', mass);
+    console.log('gravity', gravity);
+
+    let resultado = 0;
+    let objRetorno = {};
+    let msj = '';
+
+    if (gravity == 'unknown' || mass == 'unknown') {
+        msj = 'La gravedad o la masa son desconocidas, por lo cual no se puede realizar el calculo de peso.' ;
+        resultado = 0;    
+    } else {
+        gravity.replace(' standard', '');
+        msj = 'Peso calculado correctamente' ;
+        resultado = mass * parseFloat(gravity);
+    }
+
+    // resultado = mass * gravity;
+
+    objRetorno = {
+
+        "nombre personaje" : nameP,
+        "peso" : resultado ,
+        "mensaje": msj
+
+    }
+
+    return objRetorno;
 }
 
 const genericRequest = async (url, method, body, logging = false) => {
     let options = {
         method: method
     }
-   console.log('body', body);
 
     const response = await fetch(url, options);
     const data = await response.json();
-
 
     if (response.status == 200) {
 
