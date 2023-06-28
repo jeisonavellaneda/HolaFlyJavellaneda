@@ -15,8 +15,12 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getPeople/:id', async (req, res) => {
-        const data = await app.swapiFunctions.peopleRequest(`https://swapi.dev/api/people/${req.params.id}`, 'GET');
-        res.send(data);
+        try {
+            const data = await app.swapiFunctions.peopleRequest(`https://swapi.dev/api/people/${req.params.id}`, 'GET');
+            res.status(200).send(tets);
+        } catch (err) {
+            res.status(400).send({ error: err.message });
+        }
     });
 
     server.get('/hfswapi/getPlanet/:id', async (req, res) => {
