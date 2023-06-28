@@ -8,18 +8,26 @@ const genericRequest = async (url, method, body, logging = false) => {
     let options = {
         method: method
     }
-    if(body){
-        options.body = body;
-    }
+   console.log('body', body);
+
     const response = await fetch(url, options);
     const data = await response.json();
 
+
     if (response.status == 200) {
- 
-        objResponse = {
-            "error": false,
-            "msj" : 'Información correcta.',
-            "data" : data
+
+        if(body && body == 'getPlanet'){
+            objResponse = {
+                "error": false,
+                "msj" : 'Información correcta.',
+                "data" : { "name " : data.name , "gravity" : data.gravity } 
+            }            
+        } else {
+            objResponse = {
+                "error": false,
+                "msj" : 'Información correcta.',
+                "data" :  data
+            }
         }
     } else {
         objResponse = {
